@@ -87,7 +87,7 @@ odoo.define('web_m2x_options.web_m2x_options', function (require) {
             var is_string = typeof option === 'string'
             var is_bool = typeof option === 'boolean'
             if (is_string) {
-                return option === 'true' || option === 'True' || option === '1'
+                return option === 'true' || option === 'True'
             } else if (is_bool) {
                 return option
             }
@@ -95,7 +95,7 @@ odoo.define('web_m2x_options.web_m2x_options', function (require) {
         },
 
         show_error_displayer: function () {
-            if(this.is_option_set(this.options.m2o_dialog) ||
+            if(this.options.m2o_dialog ||
                _.isUndefined(this.options.m2o_dialog) && this.is_option_set(this.view.ir_options['web_m2x_options.m2o_dialog']) ||
                this.can_create && _.isUndefined(this.options.m2o_dialog) && _.isUndefined(this.view.ir_options['web_m2x_options.m2o_dialog'])) {
                 new M2ODialog(this).open();
@@ -182,7 +182,7 @@ odoo.define('web_m2x_options.web_m2x_options', function (require) {
                 }
 
                 // search more... if more results that max
-                var can_search_more = (self.options && self.is_option_set(self.options.search_more)),
+                var can_search_more = (self.options && !!self.options.search_more),
                     search_more_undef = _.isUndefined(self.options.search_more) && _.isUndefined(self.view.ir_options['web_m2x_options.search_more']),
                     search_more = self.is_option_set(self.view.ir_options['web_m2x_options.search_more']);
 
@@ -209,7 +209,7 @@ odoo.define('web_m2x_options.web_m2x_options', function (require) {
                 var raw_result = _(data.result).map(function (x) {
                     return x[1];
                 });
-                var quick_create = self.is_option_set(self.options.create) || self.is_option_set(self.options.quick_create),
+                var quick_create = !!self.options.create || !!self.options.quick_create,
                     quick_create_undef = _.isUndefined(self.options.create) && _.isUndefined(self.options.quick_create),
                     m2x_create_undef = _.isUndefined(self.view.ir_options['web_m2x_options.create']),
                     m2x_create = self.is_option_set(self.view.ir_options['web_m2x_options.create']);
@@ -232,11 +232,11 @@ odoo.define('web_m2x_options.web_m2x_options', function (require) {
 
                 // TODO: Remove create_edit,create,no_create_edit and no_create options when migrating to 11.0 -> Odoo's core already support them by default
                 // create...
-                var create_edit = self.is_option_set(self.options.create) || self.is_option_set(self.options.create_edit),
+                var create_edit = !!self.options.create || !!self.options.create_edit,
                     create_edit_undef = _.isUndefined(self.options.create) && _.isUndefined(self.options.create_edit) && _.isUndefined(self.options.no_create) && _.isUndefined(self.options.no_create_edit),
                     m2x_create_edit_undef = _.isUndefined(self.view.ir_options['web_m2x_options.create_edit']),
                     m2x_create_edit = self.is_option_set(self.view.ir_options['web_m2x_options.create_edit']),
-                    no_create_edit = self.is_option_set(self.options.no_create) || self.is_option_set(self.options.no_create_edit),
+                    no_create_edit = !!self.options.no_create || !!self.options.no_create_edit,
                     no_create_edit_undef = _.isUndefined(self.options.no_create) && _.isUndefined(self.options.no_create_edit);
 
                 var show_create_edit = (!self.options && (m2x_create_edit_undef || m2x_create_edit));
@@ -371,7 +371,7 @@ odoo.define('web_m2x_options.web_m2x_options', function (require) {
                     });
                 }
                 // quick create
-                var quick_create = self.is_option_set(self.options.create) || self.is_option_set(self.options.quick_create),
+                var quick_create = !!self.options.create || !!self.options.quick_create,
                     quick_create_undef = _.isUndefined(self.options.create) && _.isUndefined(self.options.quick_create),
                     m2x_create_undef = _.isUndefined(self.view.ir_options['web_m2x_options.create']),
                     m2x_create = self.is_option_set(self.view.ir_options['web_m2x_options.create']);
@@ -393,11 +393,11 @@ odoo.define('web_m2x_options.web_m2x_options', function (require) {
 
                 // TODO: Remove create_edit,create,no_create_edit and no_create options when migrating to 11.0 -> Odoo's core already support them by default
                 // create...
-                var create_edit = self.is_option_set(self.options.create) || self.is_option_set(self.options.create_edit),
+                var create_edit = !!self.options.create || !!self.options.create_edit,
                     create_edit_undef = _.isUndefined(self.options.create) && _.isUndefined(self.options.create_edit),
                     m2x_create_edit_undef = _.isUndefined(self.view.ir_options['web_m2x_options.create_edit']),
                     m2x_create_edit = self.is_option_set(self.view.ir_options['web_m2x_options.create_edit']),
-                    no_create_edit = self.is_option_set(self.options.no_create) || self.is_option_set(self.options.no_create_edit),
+                    no_create_edit = !!self.options.no_create || !!self.options.no_create_edit,
                     no_create_edit_undef = _.isUndefined(self.options.no_create) && _.isUndefined(self.options.no_create_edit);
                 var show_create_edit = (!self.options && (m2x_create_edit_undef || m2x_create_edit))
                 if (!show_create_edit) {
@@ -424,8 +424,8 @@ odoo.define('web_m2x_options.web_m2x_options', function (require) {
 
         open_badge: function(ev){
             var self = this;
-            var open = (self.options && self.is_option_set(self.options.open));
-            var no_color_picker = (self.options && self.is_option_set(self.options.no_color_picker));
+            var open = (self.options && !!self.options.open);
+            var no_color_picker = (self.options && !!self.options.no_color_picker);
             if(open){
                 self.mutex.exec(function(){
                     var id = parseInt($(ev.currentTarget).data('id'), 10);
